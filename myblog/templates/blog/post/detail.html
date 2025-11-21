@@ -4,9 +4,13 @@
 
 {% block content %}
   <h1>{{ post.title }}</h1>
-  <p class="date">Published {{ post.publish }} by {{ post.author }}</p>
-  <div>
-    {{ post.body|linebreaks }}
-  </div>
-  <p><a href="/">Back to list</a></p>
+  <p class="date">
+    Опубліковано {{ post.publish }} автором {{ post.author }}
+  </p>
+  {{ post.body|linebreaks }}
+  <p>
+    <a href="{% url 'blog:post_share' post.id %}" class="btn btn-primary">
+      Поділитися
+    </a>
+  </p>
 {% endblock %}
