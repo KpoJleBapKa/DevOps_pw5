@@ -68,8 +68,32 @@ def post_detail(request, year, month, day, post):
         publish__month=month,
         publish__day=day,
     )
+    
+    # Список активних коментарів до цього поста
+    comments = post.comments.filter(active=True)
+    
+    # Форма для коментування
+    if request.method == 'POST':
+        # Коментар був опублікований
+        comment_form = CommentForm(data=request.POST)
+        if comment_form.is_valid():
+            # Створюємо об'єкт Comment, але ще не зберігаємо в базу даних
+            new_comment = comment_form.save(commit=False)
+            # Прив'язуємо коментар до поточного поста
+            new_comment.post = post
+            # Зберігаємо коментар в базі даних
+            new_comment.save()
+            # Перенаправляємо на ту саму сторінку, щоб уникнути повторного відправлення форми
+            return redirect(post.get_absolute_url())
+    else:
+        comment_form = CommentForm()
+    
     return render(
         request,
         'blog/post/detail.html',
-        {'post': post}
+        {
+            'post': post,
+            'comments': comments,
+            'comment_form': comment_form,
+        }
     )

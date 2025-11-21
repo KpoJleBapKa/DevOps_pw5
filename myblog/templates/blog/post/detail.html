@@ -3,14 +3,54 @@
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
-  <h1>{{ post.title }}</h1>
-  <p class="date">
-    Опубліковано {{ post.publish }} автором {{ post.author }}
-  </p>
-  {{ post.body|linebreaks }}
-  <p>
-    <a href="{% url 'blog:post_share' post.id %}" class="btn btn-primary">
-      Поділитися
-    </a>
-  </p>
+  <article class="post-detail">
+    <h1>{{ post.title }}</h1>
+    <p class="date">
+      Опубліковано {{ post.publish }} автором {{ post.author }}
+    </p>
+    <div class="post-body">
+      {{ post.body|linebreaks }}
+    </div>
+    
+    <div class="share-post">
+      <a href="{% url 'blog:post_share' post.id %}" class="btn btn-primary">
+        Поділитися
+      </a>
+    </div>
+
+    <!-- Коментарі -->
+    <div class="comments-section">
+      <h2>Коментарі ({{ comments.count }})</h2>
+      
+      {% for comment in comments %}
+        <div class="comment">
+          <div class="comment-header">
+            <strong>{{ comment.name }}</strong>
+            <span class="comment-date">{{ comment.created|date:"d.m.Y H:i" }}</span>
+          </div>
+          <div class="comment-body">
+            {{ comment.body|linebreaks }}
+          </div>
+        </div>
+      {% empty %}
+        <p>Ще немає коментарів. Будьте першим!</p>
+      {% endfor %}
+
+      <!-- Форма додавання коментаря -->
+      <div class="add-comment">
+        <h3>Додати коментар</h3>
+        {% if new_comment %}
+          <div class="alert alert-success" role="alert">
+            Ваш коментар успішно додано і очікує модерації.
+          </div>
+        {% else %}
+          <form method="post">
+            {% csrf_token %}
+            {{ comment_form.as_p }}
+            <button type="submit" class="btn btn-primary">Надіслати</button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+  </article>
 {% endblock %}
