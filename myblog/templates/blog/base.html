@@ -75,6 +75,11 @@
                         {% include 'blog/includes/subscribe_form.html' %}
                     {% endif %}
                     
+                    <!-- Latest Posts Widget -->
+                    {% if latest_posts %}
+                        {% include 'blog/includes/latest_posts.html' %}
+                    {% endif %}
+                    
                     <!-- Categories/Tags Widget -->
                     <div class="card mb-4">
                         <div class="card-header">
@@ -86,6 +91,8 @@
                                     <a href="{% url 'blog:post_list_by_tag' tag.slug %}" class="btn btn-sm btn-outline-secondary">
                                         {{ tag.name }}
                                     </a>
+                                {% empty %}
+                                    <p class="text-muted mb-0">Немає тегів</p>
                                 {% endfor %}
                             </div>
                         </div>

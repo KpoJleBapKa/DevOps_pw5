@@ -1,0 +1,23 @@
+<div class="card mb-4">
+    <div class="card-header">
+        <h5>Останні публікації</h5>
+    </div>
+    <div class="list-group list-group-flush">
+        {% for post in latest_posts %}
+            <a href="{{ post.get_absolute_url }}" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h6 class="mb-1">{{ post.title|truncatewords:8 }}</h6>
+                    <small class="text-muted">{{ post.publish|date:"d M Y" }}</small>
+                </div>
+                <small class="text-muted">
+                    <i class="far fa-eye me-1"></i> {{ post.views }} 
+                    <i class="far fa-comment ms-2 me-1"></i> {{ post.comments.count }}
+                </small>
+            </a>
+        {% empty %}
+            <div class="list-group-item">
+                <p class="mb-0 text-muted">Немає публікацій</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>

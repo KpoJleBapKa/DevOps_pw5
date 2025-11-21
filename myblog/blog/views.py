@@ -82,6 +82,9 @@ def post_list(request, tag_slug=None):
     # Get all tags for the sidebar
     tags = Tag.objects.all()
     
+    # Get latest posts for the sidebar (3 most recent)
+    latest_posts = Post.published.order_by('-publish')[:3]
+    
     # Pagination
     paginator = Paginator(post_list, 3)
     page_number = request.GET.get('page', 1)
@@ -99,6 +102,7 @@ def post_list(request, tag_slug=None):
         'search_form': search_form,
         'query': query,
         'subscribe_form': subscribe_form,
+        'latest_posts': latest_posts,
     })
 
 class PostListView(ListView):
@@ -155,6 +159,9 @@ def post_detail(request, year, month, day, post):
     # Get all tags for the sidebar
     tags = Tag.objects.all()
     
+    # Get latest posts for the sidebar (3 most recent)
+    latest_posts = Post.published.order_by('-publish').exclude(id=post.id)[:3]
+    
     return render(
         request,
         'blog/post/detail.html',
@@ -165,6 +172,7 @@ def post_detail(request, year, month, day, post):
             'similar_posts': similar_posts,
             'subscribe_form': EmailSubscribeForm(),
             'tags': tags,
+            'latest_posts': latest_posts,
         }
     )
 
