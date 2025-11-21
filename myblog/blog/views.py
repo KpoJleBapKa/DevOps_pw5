@@ -1,10 +1,10 @@
-from .models import Post
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
-from .forms import EmailPostForm
 from django.core.mail import send_mail
 from django.utils import timezone
+from .models import Post, Comment, Tag
+from .forms import EmailPostForm, CommentForm
 
 def post_share(request, post_id):
     # Отримуємо публікацію за ідентифікатором
@@ -40,8 +40,14 @@ def post_share(request, post_id):
         'sent': sent
     })
 
-def post_list(request):
+def post_list(request, tag_slug=None):
     post_list = Post.published.all()
+    tag = None
+    
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        post_list = post_list.filter(tags__in=[tag])
+    
     paginator = Paginator(post_list, 3)
     page_number = request.GET.get('page', 1)
     try:
@@ -51,7 +57,10 @@ def post_list(request):
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
 
-    return render(request, 'blog/post/list.html', {'posts': posts})
+    return render(request, 'blog/post/list.html', {
+        'posts': posts,
+        'tag': tag,
+    })
 
 class PostListView(ListView):
     queryset = Post.published.all()
