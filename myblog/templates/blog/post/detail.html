@@ -64,5 +64,24 @@
         {% endif %}
       </div>
     </div>
+    
+    {% if similar_posts %}
+    <div class="similar-posts">
+      <h3>Схожі публікації</h3>
+      <div class="similar-posts-grid">
+        {% for post in similar_posts %}
+        <div class="similar-post">
+          <a href="{{ post.get_absolute_url }}" class="similar-post-link">
+            <h4>{{ post.title }}</h4>
+            <p class="similar-post-date">{{ post.publish|date:"d.m.Y" }}</p>
+            <p class="similar-post-preview">
+              {{ post.body|truncatewords:15|linebreaks }}
+            </p>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
   </article>
 {% endblock %}

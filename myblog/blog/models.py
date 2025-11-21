@@ -60,6 +60,20 @@ class Comment(models.Model):
         return f'Коментар від {self.name} до {self.post}'
 
 
+class Subscriber(models.Model):
+    email = models.EmailField(unique=True, verbose_name='Електронна пошта')
+    created = models.DateTimeField(auto_now_add=True, verbose_name='Дата підписки')
+    is_active = models.BooleanField(default=True, verbose_name='Активна підписка')
+    
+    class Meta:
+        verbose_name = 'Підписник'
+        verbose_name_plural = 'Підписники'
+        ordering = ['-created']
+    
+    def __str__(self):
+        return self.email
+
+
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(max_length=50, unique=True)

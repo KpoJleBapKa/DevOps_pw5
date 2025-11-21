@@ -14,4 +14,6 @@ urlpatterns = [
          name='post_detail'),
     # Поділитися публікацією
     path('<int:post_id>/share/', views.post_share, name='post_share'),
+    # Підписка на публікації
+    path('subscribe/', views.subscribe, name='subscribe'),
 ]

@@ -23,3 +23,37 @@ class CommentForm(forms.ModelForm):
             'email': 'Email',
             'body': 'Коментар'
         }
+
+
+class EmailSubscribeForm(forms.Form):
+    email = forms.EmailField(
+        label='',
+        widget=forms.EmailInput(attrs={
+            'placeholder': 'Введіть email',
+            'class': 'form-control',
+            'required': 'required'
+        }),
+        error_messages={
+            'required': 'Будь ласка, введіть email',
+            'invalid': 'Будь ласка, введіть коректний email'
+        }
+    )
+    
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        # You can add additional validation here if needed
+        # For example, check if email is already subscribed
+        return email
+
+
+class SearchForm(forms.Form):
+    query = forms.CharField(
+        label='',
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Пошук...',
+            'class': 'form-control',
+            'aria-label': 'Search',
+            'aria-describedby': 'button-search',
+        }),
+        required=False
+    )
