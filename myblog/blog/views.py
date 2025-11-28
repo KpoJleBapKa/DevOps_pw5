@@ -3,7 +3,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
 from django.core.mail import send_mail, send_mass_mail
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -16,7 +16,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.template.loader import render_to_string
 from django.contrib import messages
 from django.conf import settings
-from .models import Post, Comment, Tag, Subscriber
+from taggit.models import Tag
+from .models import Post, Comment, Subscriber
 from .forms import EmailPostForm, CommentForm, EmailSubscribeForm, SearchForm
 
 def post_share(request, post_id):
@@ -79,8 +80,8 @@ def post_list(request, tag_slug=None):
         tag = get_object_or_404(Tag, slug=tag_slug)
         post_list = post_list.filter(tags__in=[tag])
     
-    # Get all tags for the sidebar
-    tags = Tag.objects.all()
+    # Get all tags with post counts
+    tags = Tag.objects.annotate(num_posts=Count('taggit_taggeditem_items'))
     
     # Get latest posts for the sidebar (3 most recent)
     latest_posts = Post.published.order_by('-publish')[:3]
@@ -98,11 +99,11 @@ def post_list(request, tag_slug=None):
     return render(request, 'blog/post/list.html', {
         'posts': posts,
         'tag': tag,
-        'tags': tags,
+        'all_tags': tags,  # Changed from 'tags' to 'all_tags' for consistency
         'search_form': search_form,
         'query': query,
         'subscribe_form': subscribe_form,
-        'latest_posts': latest_posts,
+        'recent_posts': latest_posts,  # Changed from 'latest_posts' to 'recent_posts' for consistency
     })
 
 class PostListView(ListView):
