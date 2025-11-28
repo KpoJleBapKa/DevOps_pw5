@@ -85,10 +85,32 @@
                 </div>
 
                 <!-- Recent Posts -->
-                <div class="card">
+                <div class="card mb-4">
                     <div class="card-body">
                         <h5 class="card-title">Останні публікації</h5>
                         {% show_latest_posts 3 %}
+                    </div>
+                </div>
+
+                <!-- Most Commented Posts -->
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Найбільш коментовані пости</h5>
+                        {% get_most_commented_posts 3 as most_commented_posts %}
+                        <ul class="list-unstyled">
+                            {% for post in most_commented_posts %}
+                                <li class="mb-2">
+                                    <a href="{{ post.get_absolute_url }}" class="text-decoration-none">
+                                        {{ post.title }}
+                                    </a>
+                                    <div class="text-muted small">
+                                        {{ post.comments.count }} коментар{{ post.comments.count|pluralize:"ів,и" }}
+                                    </div>
+                                </li>
+                            {% empty %}
+                                <li class="text-muted">Ще немає коментарів</li>
+                            {% endfor %}
+                        </ul>
                     </div>
                 </div>
             </div>
