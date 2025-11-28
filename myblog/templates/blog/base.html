@@ -88,16 +88,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Останні публікації</h5>
-                        <ul class="list-unstyled">
-                            {% for post in latest_posts %}
-                                <li class="mb-2">
-                                    <a href="{{ post.get_absolute_url }}" class="text-decoration-none">
-                                        {{ post.title }}
-                                    </a>
-                                    <div class="text-muted small">{{ post.publish|date:"d.m.Y" }}</div>
-                                </li>
-                            {% endfor %}
-                        </ul>
+                        {% show_latest_posts 3 %}
                     </div>
                 </div>
             </div>
