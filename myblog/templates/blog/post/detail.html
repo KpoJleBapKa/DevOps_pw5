@@ -35,34 +35,15 @@
             </div>
         </article>
 
-        <!-- Подібні публікації -->
-        {% if similar_posts %}
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5>Схожі публікації</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    {% for post in similar_posts %}
-                    <div class="col-md-6 mb-3">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h6 class="card-title">
-                                    <a href="{{ post.get_absolute_url }}" class="text-decoration-none">
-                                        {{ post.title }}
-                                    </a>
-                                </h6>
-                                <p class="card-text small text-muted">
-                                    {{ post.publish|date:"F d, Y" }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-        {% endif %}
+        <!-- Схожі публікації -->
+        <h2>Схожі публікації</h2>
+        {% for post in similar_posts %}
+            <p>
+                <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+            </p>
+        {% empty %}
+            Схожих публікацій ще немає.
+        {% endfor %}
 
         <!-- Коментарі -->
         <div class="card">

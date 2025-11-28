@@ -154,7 +154,7 @@ def post_detail(request, year, month, day, post):
                               .exclude(id=post.id)
     
     # Додаємо кількість спільних тегів для кожного поста
-    similar_posts = similar_posts.annotate(same_tags=models.Count('tags'))\
+    similar_posts = similar_posts.annotate(same_tags=Count('tags'))\
                                .order_by('-same_tags', '-publish')[:4]
     
     # Get all tags for the sidebar
